@@ -85,8 +85,12 @@ function ContactForm({ editMode }) {
             street: '',
             city: ''
         });
-
-        navigate('/contact');
+        if (editMode) {
+            navigate(`/contact/${id}`);
+        } else {
+            navigate('/contact');
+        }
+        
     };
 
     return (
