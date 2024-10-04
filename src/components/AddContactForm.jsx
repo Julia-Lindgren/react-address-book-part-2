@@ -1,25 +1,26 @@
 import React, { useContext, useEffect } from 'react';
 import { ContactsContext } from '../App';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function ContactForm({ currentContact, editMode, onSubmit }) {
+function ContactForm({ editMode }) {
+    const { id } = useParams();
     const { contacts, setContacts, formData, setFormData } = useContext(ContactsContext);
     const baseUrl = 'https://boolean-uk-api-server.fly.dev/Julia-Lindgren';
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (currentContact) {
-            setFormData(currentContact);
+        if (editMode && id) {
+            const contactToEdit = contacts.find(contact => contact.id === id);
+            if (contactToEdit) {
+                setFormData({
+                    firstName: contactToEdit.firstName,
+                    lastName: contactToEdit.lastName,
+                    street: contactToEdit.street,
+                    city: contactToEdit.city
+                });
+            }
         }
-    }, [currentContact, setFormData]);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value
-        }));
-    };
+    }, [editMode, id, contacts, setFormData]);
 
     const createContact = async (newContact) => {
         try {
@@ -40,10 +41,39 @@ function ContactForm({ currentContact, editMode, onSubmit }) {
         }
     };
 
+    const updateContact = async (formData) => {
+        try {
+            const response = await fetch(`${baseUrl}/contact/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update contact');
+            }
+
+            const updatedContact = await response.json();
+            setContacts(contacts.map(contact => (contact.id === id ? updatedContact : contact)));
+        } catch (error) {
+            console.error('Error updating contact:', error);
+        }
+    }
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (editMode && currentContact) {
-            //TODO: update contact
+        if (editMode) {
+            updateContact(formData);
         } else {
             
             createContact(formData);

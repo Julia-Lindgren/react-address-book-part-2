@@ -45,6 +45,7 @@ function App() {
                         <Route path="/contact" element={<Dashboard />} />
                         <Route path="/contact/:id" element={<ContactView />} />
                         <Route path="/contact/create" element={<ContactForm />} />
+                        <Route path="/contact/:id/edit" element={<ContactForm editMode={true} />} />
                     </Routes>
                 </BrowserRouter>
 

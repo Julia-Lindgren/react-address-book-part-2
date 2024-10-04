@@ -29,6 +29,7 @@ body {
   .contactListItem {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
+    background-color: aquamarine;
     gap: 20px;
   }
