@@ -12,3 +12,23 @@ body {
       monospace;
   }
   
+  .dashboard-layout {
+    display: flex;
+    gap: 10%;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    padding-bottom: 5px;
+  }
+
+  .contactListItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+  }
